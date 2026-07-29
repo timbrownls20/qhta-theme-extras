@@ -19,15 +19,23 @@ lives in the conference program plugin.
 qhta-theme-extras/
   qhta-theme-extras.php   Bootstrap, enqueues
   css/theme-extras.css    Sitewide styles, sectioned and labelled
+  scripts/build-zip.sh    Packages the deploy zip
   README.md
   CHANGELOG.md
 ```
 
 ## Install
 
-Zip the folder, upload via Plugins -> Add New -> Upload Plugin, activate.
+```bash
+./scripts/build-zip.sh
+```
+
+Writes `qhta-theme-extras-X.Y.Z.zip` into the plugin root. Upload via Plugins ->
+Add New -> Upload Plugin, activate.
+
 Bump `Version` in the header AND `QHTA_TX_VERSION` on every CSS change so the
-cache-buster fires. Hostinger caches aggressively; purge after deploy.
+cache-buster fires — the build script refuses to run if the two disagree.
+Hostinger caches aggressively; purge after deploy.
 
 ## Notes
 

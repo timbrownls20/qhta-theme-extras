@@ -43,6 +43,7 @@ rather than adding them here.
 qhta-theme-extras/
   qhta-theme-extras.php   Bootstrap + enqueues. Keep thin.
   css/theme-extras.css    Sitewide styles. Numbered, labelled sections.
+  scripts/build-zip.sh    Packages the deploy zip. Not shipped.
   CLAUDE.md               This file.
   README.md               Human-facing overview.
   CHANGELOG.md            Every change, every version.
@@ -95,8 +96,25 @@ Fixed subheadings and the date.
 No CI. Manual, and deliberately so.
 
 ```bash
-# from the parent directory
-zip -r qhta-theme-extras-X.Y.Z.zip qhta-theme-extras -x '*.DS_Store' '*.git*'
+# from the plugin directory
+./scripts/build-zip.sh
+```
+
+Writes `qhta-theme-extras-X.Y.Z.zip` into the plugin root (gitignored via
+`*.zip`), taking the version from the plugin header. It refuses to build on a
+header/`QHTA_TX_VERSION` mismatch and `php -l`s every PHP file first, so a stale
+cache-buster or a syntax error cannot reach the live site. Excludes `.git`,
+`.claude`, `scripts/`, previous builds and `.DS_Store`.
+
+WordPress needs the plugin folder as the archive's top level, so `zip` runs from
+the parent. Because the output sits inside the tree being zipped, the script
+builds to a temp file and moves it in — otherwise the archive swallows itself.
+
+Equivalent by hand, from the parent directory:
+
+```bash
+zip -r qhta-theme-extras/qhta-theme-extras-X.Y.Z.zip qhta-theme-extras \
+  -x '*.DS_Store' '*.git*' '*.claude*' '*.zip' 'qhta-theme-extras/scripts/*'
 ```
 
 Then: wp-admin → Plugins → Add New → Upload Plugin → activate/replace.
