@@ -1,0 +1,48 @@
+/**
+ * QHTA Theme Extras — sitewide presentation layer
+ * Sections are added as gaps are hit. Keep them labelled.
+ */
+
+/* ---------------------------------------------------------------------------
+ * 1. Design tokens
+ * ------------------------------------------------------------------------ */
+
+:root {
+	--qhta-navy: #1d3461;
+	--qhta-teal: #3ecfb2;
+	--qhta-accent: #8a1538;
+	--qhta-gold-gradient: linear-gradient(to right, #8b6914, #c9971a, #8b6914);
+}
+
+/* ---------------------------------------------------------------------------
+ * 2. Floated media in post/page content
+ *    Astra and core do not supply a reliable gutter for alignleft/alignright,
+ *    and core does not unfloat at small widths.
+ * ------------------------------------------------------------------------ */
+
+.entry-content .alignleft {
+	float: left;
+	/* 0.35em top aligns the image's optical top with the first text baseline */
+	margin: 0.35em 1.75em 1.25em 0;
+}
+
+.entry-content .alignright {
+	float: right;
+	margin: 0.35em 0 1.25em 1.75em;
+}
+
+/* Stop a float from bleeding past its containing block */
+.entry-content::after {
+	content: "";
+	display: table;
+	clear: both;
+}
+
+@media (max-width: 767px) {
+	.entry-content .alignleft,
+	.entry-content .alignright {
+		float: none;
+		display: block;
+		margin: 0 auto 1.5em;
+	}
+}
