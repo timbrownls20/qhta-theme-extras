@@ -2,7 +2,7 @@
 /**
  * Plugin Name:       QHTA Theme Extras
  * Description:       Presentation and theme-layer customisations for qhta.com.au. Replaces Astra Pro features and holds sitewide display tweaks. Contains no business logic.
- * Version:           1.0.1
+ * Version:           1.0.3
  * Author:            QHTA
  * License:           GPL-2.0-or-later
  * Requires at least: 6.0
@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'QHTA_TX_VERSION', '1.0.1' );
+define( 'QHTA_TX_VERSION', '1.0.3' );
 define( 'QHTA_TX_PATH', plugin_dir_path( __FILE__ ) );
 define( 'QHTA_TX_URL', plugin_dir_url( __FILE__ ) );
 

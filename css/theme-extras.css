@@ -18,30 +18,57 @@
  * 2. Floated media in post/page content
  *    Astra and core do not supply a reliable gutter for alignleft/alignright,
  *    and core does not unfloat at small widths.
+ *
+ *    Two things force the shape of these selectors.
+ *
+ *    Specificity must reach 0,3,0. Spectra/UAGB emits per-block CSS keyed to a
+ *    generated class (.uagb-block-25b7053f) that zeroes the margins at 0,2,0 —
+ *    the same weight as a bare `.entry-content .alignright` — and prints it
+ *    inline in wp_head, i.e. after our <link>. At equal specificity the later
+ *    rule wins, so a two-class selector loses the margin while still winning
+ *    `float`, which reads as "the gutter silently does nothing". The middle
+ *    :is() adds the third class and puts us out of reach of load order. Do not
+ *    flatten it back to `.entry-content .alignleft`.
+ *
+ *    The wrapper :is() covers the block editor. The front end wraps content in
+ *    .entry-content; the editor canvas has no such element — its wrapper is
+ *    .editor-styles-wrapper. Selectors naming only .entry-content load into the
+ *    canvas and match nothing, so the editor silently disagrees with the front
+ *    end.
+ *
+ *    The middle :is() lists the elements that actually carry the align class:
+ *    core wraps images in figure.wp-block-image, Spectra in
+ *    div.wp-block-uagb-image, the classic editor puts it straight on the img.
  * ------------------------------------------------------------------------ */
 
-.entry-content .alignleft {
+:is(.entry-content, .editor-styles-wrapper)
+	:is(.wp-block-image, .wp-block-uagb-image, figure, img).alignleft {
 	float: left;
 	/* 0.35em top aligns the image's optical top with the first text baseline */
 	margin: 0.35em 1.75em 1.25em 0;
 }
 
-.entry-content .alignright {
+:is(.entry-content, .editor-styles-wrapper)
+	:is(.wp-block-image, .wp-block-uagb-image, figure, img).alignright {
 	float: right;
 	margin: 0.35em 0 1.25em 1.75em;
 }
 
 /* Stop a float from bleeding past its containing block */
-.entry-content::after {
+.entry-content::after,
+.editor-styles-wrapper .is-root-container::after {
 	content: "";
 	display: table;
 	clear: both;
 }
 
 @media (max-width: 767px) {
-	.entry-content .alignleft,
-	.entry-content .alignright {
+	:is(.entry-content, .editor-styles-wrapper)
+		:is(.wp-block-image, .wp-block-uagb-image, figure, img).alignleft,
+	:is(.entry-content, .editor-styles-wrapper)
+		:is(.wp-block-image, .wp-block-uagb-image, figure, img).alignright {
 		float: none;
+		/* Spectra sets display:flex on its wrapper; block is what centres it */
 		display: block;
 		margin: 0 auto 1.5em;
 	}
